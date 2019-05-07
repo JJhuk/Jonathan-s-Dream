@@ -14,7 +14,6 @@ int select_opt;	//귀찮아서 그냥 전역번수임.
 
 //함수명 gotoxy
 //인자값인 x,y 에 대입하면 그 대입 한 곳으로 커서가 움직임
-
 void gotoxy(int x, int y) {
 	COORD Cur;
 	Cur.X = x;
@@ -22,9 +21,19 @@ void gotoxy(int x, int y) {
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
 }
 
+
+//커서 지워주는 함수
+//CONSOLE_CURSOR_INFO 콘솔의 커서 정보를 얻기 위한 구조체
+//GetConsoleCursorInfo 콘솔 출력창 정보 반환
+void RemoveCursor(void) {
+	CONSOLE_CURSOR_INFO curInfo;
+	GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+	curInfo.bVisible = 0; //bVisible 멤버 변경
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);	//변경값 적용
+}
+
 //함수명 KeyControl
 //기능 : 키를 받은 것을 return 함
-
 int KeyControl() {
 	char temp = _getch();
 
@@ -343,7 +352,7 @@ int DrawMenu() {
 	int x = Menu_X;
 	int y = Menu_Y;
 	gotoxy(x - 2, y);
-	printf("▶  start");
+	printf("▶  start ◀");
 	gotoxy(x, y + 1);
 	printf("  credit  ");
 	gotoxy(x, y + 2);
@@ -355,8 +364,12 @@ int DrawMenu() {
 			if (y > Menu_Y) {
 				gotoxy(x - 2, y);
 				printf(" ");
+				gotoxy(x + 8, y);
+				printf(" ");
 				gotoxy(x - 2, --y);
 				printf("▶");
+				gotoxy(x + 8, y);
+				printf("◀");
 			}
 			break;
 		}
@@ -364,8 +377,12 @@ int DrawMenu() {
 			if (y < Menu_Y + 2) {
 				gotoxy(x - 2, y);
 				printf(" ");
+				gotoxy(x + 8, y);
+				printf(" ");
 				gotoxy(x - 2, ++y);
 				printf("▶");
+				gotoxy(x + 8, y);
+				printf("◀");
 			}
 			break;
 		}
@@ -378,6 +395,8 @@ int DrawMenu() {
 	}
 }
 void gameInit() {
+	RemoveCursor();
+	system("cls");
 	select_opt = DrawMenu();		//1 게임시작 2 게임정보 3종료
 }
 
@@ -386,7 +405,6 @@ int main()
 	bool GameStart = true;
 
 	while (GameStart) {
-		system("cls");
 		gameInit();
 
 		switch (select_opt) {
