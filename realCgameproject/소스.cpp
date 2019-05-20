@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <conio.h>
 #include <Windows.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define UP 0
 #define DOWN 1
@@ -9,6 +11,35 @@
 #define SUBMIT 4 //선택 엔터
 #define Menu_X 40
 #define Menu_Y 24
+
+#define IMGSIZE_W 7
+#define IMGSIZE_H 4
+
+#define FOLLOWUP_START_X 10
+#define FOLLOWUP_START_Y 4
+
+char strkey[4][IMGSIZE_H][IMGSIZE_W] = {
+	{
+	"  @@  ",
+	" @@@@ ",
+	"@@@@@@",
+	},
+	{
+	"@@@@@@",
+	" @@@@ ",
+	"  @@  "
+	},
+	{
+	" @@@@",
+	"@@@@@",
+	" @@@@"
+	},
+	{
+	"@@@@ ",
+	"@@@@@",
+	"@@@@ "
+	}
+};
 
 int select_opt;	//귀찮아서 그냥 전역번수임.
 
@@ -20,6 +51,45 @@ void gotoxy(int x, int y) {
 	Cur.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
 }
+
+
+
+// 입력 이벤트 출력
+// 함수명 : DrawTemplate
+// 기능 : 게임의 틀을 출력하는함수
+void DrawFollowUPTemplate() {
+	gotoxy(0, 0); //첫 |부분 6,3
+	printf("========================================================================================================================\n");
+	printf("|                                                                                                                      |\n");
+	printf("|     =============      =============      =============      =============                                           |\n");
+	printf("|     |           |      |           |      |           |      |           |                                           |\n");
+	printf("|     |           |      |           |      |           |      |           |                                           |\n");
+	printf("|     |           |      |           |      |           |      |           |                                           |\n");
+	printf("|     |           |      |           |      |           |      |           |                                           |\n");
+	printf("|     |           |      |           |      |           |      |           |                                           |\n");
+	printf("|     =============      =============      =============      =============                                           |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("|                                                                                                                      |\n");
+	printf("========================================================================================================================\n");
+}
+
 
 
 //커서 지워주는 함수
@@ -49,40 +119,40 @@ int KeyControl() {
 		return SUBMIT;
 }
 
+void Drawstrkey(int x, int y, int answer) {
+	gotoxy(x, y);
+	for (int i = 0; i < IMGSIZE_H; i++) {
+		for (int j = 0; j < IMGSIZE_W; j++) {
+			printf("%c", strkey[answer][i][j]);
+		}
+		gotoxy(x, ++y);
+	}
+}
 
-// 함수명 : DrawTemplate
-// 기능 : 게임의 틀을 출력하는함수
-void DrawTemplate() {
-	gotoxy(0, 0);
-	printf("========================================================================================================================\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("========================================================================================================================\n");
+void FollowUP_game() {
+	DrawFollowUPTemplate();
+	srand(time(NULL));
+	int answer[4];
+	for (int z = 0; z < 4; z++) {
+		answer[z] = rand() % 4; //0~3까지 난수생성 == up down left right
+
+		if (answer[z] == UP) {
+			Drawstrkey(FOLLOWUP_START_X+(z*19), FOLLOWUP_START_Y, UP);
+			Sleep(1000);
+		}
+		else if (answer[z] == DOWN) {
+			Drawstrkey(FOLLOWUP_START_X+(z * 19), FOLLOWUP_START_Y, DOWN);
+			Sleep(1000);
+		}
+		else if (answer[z] == LEFT) {
+			Drawstrkey(FOLLOWUP_START_X + (z * 19), FOLLOWUP_START_Y, LEFT);
+			Sleep(1000);
+		}
+		else if (answer[z] == RIGHT) {
+			Drawstrkey(FOLLOWUP_START_X + (z * 19), FOLLOWUP_START_Y, RIGHT);
+			Sleep(1000);
+		}
+	}
 }
 
 void DrawMain() {
@@ -172,7 +242,7 @@ void DrawStartExemple() {	//이함수는 나중에 프로젝트 할때는 안쓸꺼임 그냥 프로토
 		printf("| ■■■■■■■■■■■■                              ■■              ■■■■■■■■■■■■■■■              |\n");
 		printf("|                     ■■                              ■■                                                          |\n");
 		printf("|                     ■■■■■■■■■■■■■■■■■■■                                                          |\n");
-		printf("|                     ■■■■■■■■■■■■■■■■■■■                            @ : 플레이어                  |\n");
+		printf("|                     ■■■■■■■■■■■■■■■■■■■                            ■ : 플레이어                  |\n");
 		printf("|                                                                                      ■ : 벽                        |\n");
 		printf("|                                                                                      ○ : 구멍                      |\n");
 		printf("|                                                                                      ● : 밀어야할 돌               |\n");
@@ -208,7 +278,7 @@ void DrawStartExemple() {	//이함수는 나중에 프로젝트 할때는 안쓸꺼임 그냥 프로토
 		printf("|                                                                                                    ^,^              |\n");
 		printf("|              ↓                                                                                                     |\n");
 		printf("|             ^.^                                                                                                     |\n");
-		printf("|                           ※                                 ☜@☞                         ※                       |\n");
+		printf("|                           ※                                 ☜■☞                         ※                       |\n");
 		printf("|     ================================================================================================================|\n");
 		printf("|                                                                                                                     |\n");
 		printf("=======================================================================================================================\n");
@@ -346,7 +416,6 @@ void DrawCredit() {
 	system("cls");
 }
 
-
 int DrawMenu() {
 	DrawMain();
 	int x = Menu_X;
@@ -394,11 +463,16 @@ int DrawMenu() {
 		}
 	}
 }
+
 void gameInit() {
 	RemoveCursor();
 	system("cls");
 	select_opt = DrawMenu();		//1 게임시작 2 게임정보 3종료
 }
+
+
+
+
 
 int main()
 {
@@ -408,16 +482,17 @@ int main()
 		gameInit();
 
 		switch (select_opt) {
-		case 1:
-			DrawStartExemple();
+		case 1:	//start
+			//DrawStartExemple();
+			FollowUP_game();
 			_getch();
 			system("cls");
 			break;
-		case 2:
+		case 2:	//credit
 			DrawCredit();
 			system("cls");
 			break;
-		case 3:
+		case 3:	//exit
 			GameStart = false;
 		}
 	}
