@@ -18,6 +18,9 @@
 #define FOLLOWUP_START_X 10
 #define FOLLOWUP_START_Y 4
 
+#define FOLLOWUP_START_INPUT_X 38
+#define FOLLOWUP_START_INPUT_Y 21
+
 char strkey[4][IMGSIZE_H][IMGSIZE_W] = {
 	{
 	"  @@  ",
@@ -58,6 +61,7 @@ void gotoxy(int x, int y) {
 // 함수명 : DrawTemplate
 // 기능 : 게임의 틀을 출력하는함수
 void DrawFollowUPTemplate() {
+	system("cls");
 	gotoxy(0, 0); //첫 |부분 6,3
 	printf("========================================================================================================================\n");
 	printf("|                                                                                                                      |\n");
@@ -78,13 +82,13 @@ void DrawFollowUPTemplate() {
 	printf("|                                                                                                                      |\n");
 	printf("|                                                                                                                      |\n");
 	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
-	printf("|                                                                                                                      |\n");
+	printf("|                                  =============      =============      =============      =============              |\n");
+	printf("|                                  |           |      |           |      |           |      |           |              |\n");
+	printf("|                                  |           |      |           |      |           |      |           |              |\n");
+	printf("|                                  |           |      |           |      |           |      |           |              |\n");
+	printf("|                                  |           |      |           |      |           |      |           |              |\n");
+	printf("|                                  |           |      |           |      |           |      |           |              |\n");
+	printf("|                                  =============      =============      =============      =============              |\n");
 	printf("|                                                                                                                      |\n");
 	printf("|                                                                                                                      |\n");
 	printf("========================================================================================================================\n");
@@ -105,18 +109,22 @@ void RemoveCursor(void) {
 //함수명 KeyControl
 //기능 : 키를 받은 것을 return 함
 int KeyControl() {
-	char temp = _getch();
+	char temp;
 
-	if (temp == 'w' || temp == 'W')
-		return UP;
-	else if (temp == 'a' || temp == 'A')
-		return LEFT;
-	else if (temp == 's' || temp == 'S')
-		return DOWN;
-	else if (temp == 'd' || temp == 'D')
-		return RIGHT;
-	else if (temp == 13)	//13은 엔터의 아스키코드
-		return SUBMIT;
+	while (true) {
+		temp = _getch();
+		if (temp == 'w' || temp == 'W')
+			return UP;
+		else if (temp == 'a' || temp == 'A')
+			return LEFT;
+		else if (temp == 's' || temp == 'S')
+			return DOWN;
+		else if (temp == 'd' || temp == 'D')
+			return RIGHT;
+		else if (temp == 13)	//13은 엔터의 아스키코드
+			return SUBMIT;
+	}
+
 }
 
 void Drawstrkey(int x, int y, int answer) {
@@ -129,30 +137,57 @@ void Drawstrkey(int x, int y, int answer) {
 	}
 }
 
-void FollowUP_game() {
+bool FollowUP_game() {
 	DrawFollowUPTemplate();
 	srand(time(NULL));
 	int answer[4];
-	for (int z = 0; z < 4; z++) {
+	char inPut[4];
+	for (int z = 0; z < 4; z++) {// 문제 생성
 		answer[z] = rand() % 4; //0~3까지 난수생성 == up down left right
 
 		if (answer[z] == UP) {
 			Drawstrkey(FOLLOWUP_START_X+(z*19), FOLLOWUP_START_Y, UP);
-			Sleep(1000);
+			Sleep(250);
 		}
 		else if (answer[z] == DOWN) {
 			Drawstrkey(FOLLOWUP_START_X+(z * 19), FOLLOWUP_START_Y, DOWN);
-			Sleep(1000);
+			Sleep(250);
 		}
 		else if (answer[z] == LEFT) {
 			Drawstrkey(FOLLOWUP_START_X + (z * 19), FOLLOWUP_START_Y, LEFT);
-			Sleep(1000);
+			Sleep(250);
 		}
 		else if (answer[z] == RIGHT) {
 			Drawstrkey(FOLLOWUP_START_X + (z * 19), FOLLOWUP_START_Y, RIGHT);
-			Sleep(1000);
+			Sleep(250);
 		}
 	}
+	DrawFollowUPTemplate(); 
+	for (int z1 = 0; z1 < 4; z1++) {	//정답 입력
+		inPut[z1] = KeyControl();
+		if (inPut[z1] == UP) {
+			Drawstrkey(FOLLOWUP_START_INPUT_X + (z1 * 19), FOLLOWUP_START_INPUT_Y, UP);
+			Sleep(250);
+		}
+		else if (inPut[z1] == DOWN) {
+			Drawstrkey(FOLLOWUP_START_INPUT_X + (z1 * 19), FOLLOWUP_START_INPUT_Y, DOWN);
+			Sleep(250);
+		}
+		else if (inPut[z1] == LEFT) {
+			Drawstrkey(FOLLOWUP_START_INPUT_X + (z1 * 19), FOLLOWUP_START_INPUT_Y, LEFT);
+			Sleep(250);
+		}
+		else if (inPut[z1] == RIGHT) {
+			Drawstrkey(FOLLOWUP_START_INPUT_X + (z1 * 19), FOLLOWUP_START_INPUT_Y, RIGHT);
+			Sleep(250);
+		}
+	}
+
+	if (inPut[0] == answer[0] && inPut[1] == answer[1] && inPut[2] == answer[2] && inPut[3] == answer[3]) 
+		return true;
+	else
+		return false;
+
 }
 
 void DrawMain() {
@@ -477,6 +512,7 @@ void gameInit() {
 int main()
 {
 	bool GameStart = true;
+	bool IsOKFollowUP_game = false;
 
 	while (GameStart) {
 		gameInit();
@@ -484,7 +520,7 @@ int main()
 		switch (select_opt) {
 		case 1:	//start
 			//DrawStartExemple();
-			FollowUP_game();
+			IsOKFollowUP_game = FollowUP_game();
 			_getch();
 			system("cls");
 			break;
