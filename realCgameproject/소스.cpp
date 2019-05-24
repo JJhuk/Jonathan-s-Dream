@@ -21,6 +21,10 @@
 #define FOLLOWUP_START_INPUT_X 38
 #define FOLLOWUP_START_INPUT_Y 21
 
+//쨋든 여기 이런식으로 추가하고 소스를 다시짠다거나 그러면
+//vs에서 하는방법이랑 저거 프로그램 ^^ 으로 하는거 둘다보여드림
+//팀탐색기에 변경내용
+
 char strkey[4][IMGSIZE_H][IMGSIZE_W] = {
 	{
 	"  @@  ",
