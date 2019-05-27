@@ -4,6 +4,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
 #define UP 0
 #define DOWN 1
 #define LEFT 2
@@ -45,6 +52,8 @@ char strkey[4][IMGSIZE_H][IMGSIZE_W] = {
 };
 
 int select_opt;	//귀찮아서 그냥 전역번수임.
+
+ifstream in;
 
 //함수명 gotoxy
 //인자값인 x,y 에 대입하면 그 대입 한 곳으로 커서가 움직임
@@ -188,6 +197,41 @@ bool FollowUP_game() {
 	else
 		return false;
 
+}
+
+void textBox() {
+	system("cls");
+	gotoxy(0, 0);	//name : x 15 y 18, message x 11 y 20 
+	printf("=======================================================================================================================\n");
+	printf("|                                                                                                                     |\n");
+	printf("|   ☆                                  ☆                                                             ☆             |\n");
+	printf("|              ★                                              ☆                        ★                           |\n");
+	printf("|                        ☆                                                                                           |\n");
+	printf("|                                                                                                           ★        |\n");
+	printf("|      ★                                                  ★              ☆                                         |\n");
+	printf("|                                        ☆                                                                           |\n");
+	printf("|                                                                                                   ☆                |\n");
+	printf("|                ☆                                                                                                   |\n");
+	printf("|                                ★                     ☆                                                            |\n");
+	printf("|                                                                                   ★                                |\n");
+	printf("|                                                                                                                     |\n");
+	printf("|                                                                                                                     |\n");
+	printf("|                                                                                                                     |\n");
+	printf("|                                                                                                                     |\n");
+	printf("|                                                                                                                     |\n");
+	printf("|                                                                                                                     |\n");
+	printf("|      ======== 이름   ===================================================================================            |\n");
+	printf("|      |                                                                                                 |            |\n");
+	printf("|      |                                                                                                 |            |\n");
+	printf("|      |                                                                                                 |            |\n");
+	printf("|      |                                                                                                 |            |\n");
+	printf("|      |                                                                                                 |            |\n");
+	printf("|      |                                                                                                 |            |\n");
+	printf("|      |                                                                                                 |            |\n");
+	printf("|      ===================================================================================================            |\n");
+	printf("|                                                                                                                     |\n");
+	printf("|                                                                                                                     |\n");
+	printf("=======================================================================================================================\n");
 }
 
 void DrawMain() {
@@ -506,7 +550,45 @@ void gameInit() {
 }
 
 
+void textmanager() {
+	string s;
+	
+	POINT p;
+	in.open("C:\\Users\\LeeJuHyuk\\source\\repos\\SmugCgame\\realCgameproject\\text.txt");
+	bool isName = TRUE;
+	while (getline(in, s)) {
+		istringstream ss(s);
+		string sub_s;
+		while (getline(ss, sub_s, '\t')) {
+			p = { 11,20 };
+			if (isName) {
+				textBox();
+				gotoxy(16, 18);
+				cout << sub_s;
+			}
+			else {
+				gotoxy(p.x, p.y);
+				for (int i = 0; i < sub_s.length(); i++) {
+					Sleep(50);
+					cout << sub_s[i];
+					if (sub_s[i] == '.' && sub_s[i + 1] == '!') {
+						p.y++;
+						i++;
+						gotoxy(p.x, p.y);
+					}
 
+				}
+			}
+			if (!isName) {
+				gotoxy(100, 24);
+				printf("▼");
+				_getch();
+			}
+			isName = !isName;
+		}
+	}
+	in.close();
+}
 
 
 int main()
@@ -520,9 +602,16 @@ int main()
 		switch (select_opt) {
 		case 1:	//start
 			//DrawStartExemple();
+			textmanager();
 			IsOKFollowUP_game = FollowUP_game();
-			_getch();
 			system("cls");
+			gotoxy(0, 0);
+			if (IsOKFollowUP_game)
+				printf("정답입니다!!!!!!!!!!!!!!");
+			else
+				printf("틀렸습니다 ㅜㅜㅜㅜㅜㅜㅜㅜㅜ");
+			_getch();
+			
 			break;
 		case 2:	//credit
 			DrawCredit();
