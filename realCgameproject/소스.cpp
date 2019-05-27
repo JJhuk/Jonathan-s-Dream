@@ -53,25 +53,23 @@ char strkey[4][IMGSIZE_H][IMGSIZE_W] = {
 
 int select_opt;	//귀찮아서 그냥 전역번수임.
 
-ifstream in;
+ifstream in;	//파일 출력
 
-//함수명 gotoxy
+//함수명 Gotoxy
 //인자값인 x,y 에 대입하면 그 대입 한 곳으로 커서가 움직임
-void gotoxy(int x, int y) {
+void Gotoxy(int x, int y) {
 	COORD Cur;
 	Cur.X = x;
 	Cur.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
 }
 
-
-
 // 입력 이벤트 출력
 // 함수명 : DrawTemplate
 // 기능 : 게임의 틀을 출력하는함수
 void DrawFollowUPTemplate() {
 	system("cls");
-	gotoxy(0, 0); //첫 |부분 6,3
+	Gotoxy(0, 0); //첫 |부분 6,3
 	printf("========================================================================================================================\n");
 	printf("|                                                                                                                      |\n");
 	printf("|     =============      =============      =============      =============                                           |\n");
@@ -102,8 +100,6 @@ void DrawFollowUPTemplate() {
 	printf("|                                                                                                                      |\n");
 	printf("========================================================================================================================\n");
 }
-
-
 
 //커서 지워주는 함수
 //CONSOLE_CURSOR_INFO 콘솔의 커서 정보를 얻기 위한 구조체
@@ -137,20 +133,21 @@ int KeyControl() {
 }
 
 void Drawstrkey(int x, int y, int answer) {
-	gotoxy(x, y);
+	Gotoxy(x, y);
 	for (int i = 0; i < IMGSIZE_H; i++) {
 		for (int j = 0; j < IMGSIZE_W; j++) {
 			printf("%c", strkey[answer][i][j]);
 		}
-		gotoxy(x, ++y);
+		Gotoxy(x, ++y);
 	}
 }
 
-bool FollowUP_game() {
+void FollowUP_game() {
 	DrawFollowUPTemplate();
 	srand(time(NULL));
 	int answer[4];
 	char inPut[4];
+	bool IsCorrectAnswer = false;
 	for (int z = 0; z < 4; z++) {// 문제 생성
 		answer[z] = rand() % 4; //0~3까지 난수생성 == up down left right
 
@@ -192,16 +189,22 @@ bool FollowUP_game() {
 		}
 	}
 
-	if (inPut[0] == answer[0] && inPut[1] == answer[1] && inPut[2] == answer[2] && inPut[3] == answer[3]) 
-		return true;
+	if (inPut[0] == answer[0] && inPut[1] == answer[1] && inPut[2] == answer[2] && inPut[3] == answer[3])
+		IsCorrectAnswer = true;
 	else
-		return false;
-
+		IsCorrectAnswer = false;
+	system("cls");
+	Gotoxy(0, 0);
+	if (IsCorrectAnswer)
+		printf("정답입니다!!!!!!!!!!!!!!");
+	else
+		printf("틀렸습니다 ㅜㅜㅜㅜㅜㅜㅜㅜㅜ");
+	_getch();
 }
 
-void textBox() {
+void TextBox() {
 	system("cls");
-	gotoxy(0, 0);	//name : x 15 y 18, message x 11 y 20 
+	Gotoxy(0, 0);	//name : x 15 y 18, message x 11 y 20 
 	printf("=======================================================================================================================\n");
 	printf("|                                                                                                                     |\n");
 	printf("|   ☆                                  ☆                                                             ☆             |\n");
@@ -297,7 +300,7 @@ void DrawStartExemple() {	//이함수는 나중에 프로젝트 할때는 안쓸꺼임 그냥 프로토
 		printf("|                                                                                                                     |\n");
 		printf("|                                                                                                                     |\n");
 		printf("=======================================================================================================================\n");
-		gotoxy(0, 0);
+		Gotoxy(0, 0);
 		_getch();
 		system("cls");
 		printf("======================================================================================================================\n");
@@ -329,7 +332,7 @@ void DrawStartExemple() {	//이함수는 나중에 프로젝트 할때는 안쓸꺼임 그냥 프로토
 		printf("|                                                                                      - R를 눌러 재시도 하기         |\n");
 		printf("|                                                                                                                     |\n");
 		printf("=======================================================================================================================\n");
-		gotoxy(0, 0);
+		Gotoxy(0, 0);
 		_getch();
 		system("cls");
 		printf("=======================================================================================================================\n");
@@ -361,7 +364,7 @@ void DrawStartExemple() {	//이함수는 나중에 프로젝트 할때는 안쓸꺼임 그냥 프로토
 		printf("|     ================================================================================================================|\n");
 		printf("|                                                                                                                     |\n");
 		printf("=======================================================================================================================\n");
-		gotoxy(0, 0);
+		Gotoxy(0, 0);
 }
 
 void DrawCredit() {
@@ -394,7 +397,7 @@ void DrawCredit() {
 	printf("|                                                                                                                      |\n");
 	printf("|                                                                                                                      |\n");
 	printf("========================================================================================================================\n");
-	gotoxy(0, 0);
+	Gotoxy(0, 0);
 	_getch();
 	system("cls");
 	printf("========================================================================================================================\n");
@@ -426,7 +429,7 @@ void DrawCredit() {
 	printf("|                                                                                                                      |\n");
 	printf("|                                                                                                                      |\n");
 	printf("========================================================================================================================\n");
-	gotoxy(0, 0);
+	Gotoxy(0, 0);
 	_getch();
 	system("cls");
 	printf("========================================================================================================================\n");
@@ -458,7 +461,7 @@ void DrawCredit() {
 	printf("|                                                                          ■       ■     ■      ■                  |\n");
 	printf("|                                                                                                                      |\n");
 	printf("========================================================================================================================\n");
-	gotoxy(0, 0);
+	Gotoxy(0, 0);
 	_getch();
 	system("cls");
 	printf("========================================================================================================================\n");
@@ -490,7 +493,7 @@ void DrawCredit() {
 	printf("|                                                                                           ■                         |\n");
 	printf("|                                                                                                                      |\n");
 	printf("========================================================================================================================\n");
-	gotoxy(0, 0);
+	Gotoxy(0, 0);
 	_getch();
 	system("cls");
 }
@@ -499,37 +502,37 @@ int DrawMenu() {
 	DrawMain();
 	int x = Menu_X;
 	int y = Menu_Y;
-	gotoxy(x - 2, y);
+	Gotoxy(x - 2, y);
 	printf("▶  start ◀");
-	gotoxy(x, y + 1);
+	Gotoxy(x, y + 1);
 	printf("  credit  ");
-	gotoxy(x, y + 2);
+	Gotoxy(x, y + 2);
 	printf("  exit  ");
 	while (1) {
 		int n = KeyControl();
 		switch (n) {
 		case UP: {
 			if (y > Menu_Y) {
-				gotoxy(x - 2, y);
+				Gotoxy(x - 2, y);
 				printf(" ");
-				gotoxy(x + 8, y);
+				Gotoxy(x + 8, y);
 				printf(" ");
-				gotoxy(x - 2, --y);
+				Gotoxy(x - 2, --y);
 				printf("▶");
-				gotoxy(x + 8, y);
+				Gotoxy(x + 8, y);
 				printf("◀");
 			}
 			break;
 		}
 		case DOWN: {
 			if (y < Menu_Y + 2) {
-				gotoxy(x - 2, y);
+				Gotoxy(x - 2, y);
 				printf(" ");
-				gotoxy(x + 8, y);
+				Gotoxy(x + 8, y);
 				printf(" ");
-				gotoxy(x - 2, ++y);
+				Gotoxy(x - 2, ++y);
 				printf("▶");
-				gotoxy(x + 8, y);
+				Gotoxy(x + 8, y);
 				printf("◀");
 			}
 			break;
@@ -543,18 +546,17 @@ int DrawMenu() {
 	}
 }
 
-void gameInit() {
+void GameInit() {
 	RemoveCursor();
 	system("cls");
 	select_opt = DrawMenu();		//1 게임시작 2 게임정보 3종료
 }
 
-
-void textmanager() {
+void TextManager() {
 	string s;
 	
 	POINT p;
-	in.open("C:\\Users\\LeeJuHyuk\\source\\repos\\SmugCgame\\realCgameproject\\text.txt");
+	in.open("C:\\Users\\LeeJuHyuk\\source\\repos\\SmugCgame\\realCgameproject\\text.txt");	//각 챕터마다 파일을 다르게 입력해야함.
 	bool isName = TRUE;
 	while (getline(in, s)) {
 		istringstream ss(s);
@@ -562,25 +564,25 @@ void textmanager() {
 		while (getline(ss, sub_s, '\t')) {
 			p = { 11,20 };
 			if (isName) {
-				textBox();
-				gotoxy(16, 18);
+				TextBox();
+				Gotoxy(16, 18);
 				cout << sub_s;
 			}
 			else {
-				gotoxy(p.x, p.y);
+				Gotoxy(p.x, p.y);
 				for (int i = 0; i < sub_s.length(); i++) {
 					Sleep(50);
-					cout << sub_s[i];
-					if (sub_s[i] == '.' && sub_s[i + 1] == '!') {
+					//여기에 자판소리 추가하면 될듯
+					printf("%c", sub_s[i]);
+					if (sub_s[i] == '.' && sub_s[i + 1] == '!') {	//이때 2번째줄부터 한칸 띄우고 텍스트가 출력되는 버그가 있음.
 						p.y++;
 						i++;
-						gotoxy(p.x, p.y);
+						Gotoxy(p.x, p.y);
 					}
-
 				}
 			}
 			if (!isName) {
-				gotoxy(100, 24);
+				Gotoxy(100, 24);
 				printf("▼");
 				_getch();
 			}
@@ -594,29 +596,22 @@ void textmanager() {
 int main()
 {
 	bool GameStart = true;
-	bool IsOKFollowUP_game = false;
+	
 
 	while (GameStart) {
-		gameInit();
+		GameInit();
 
 		switch (select_opt) {
+
 		case 1:	//start
-			//DrawStartExemple();
-			textmanager();
-			IsOKFollowUP_game = FollowUP_game();
-			system("cls");
-			gotoxy(0, 0);
-			if (IsOKFollowUP_game)
-				printf("정답입니다!!!!!!!!!!!!!!");
-			else
-				printf("틀렸습니다 ㅜㅜㅜㅜㅜㅜㅜㅜㅜ");
-			_getch();
-			
+			TextManager();	//텍스트창
+			FollowUP_game();	//일정 분기가 되면 이걸 실행하는걸로...
 			break;
+
 		case 2:	//credit
 			DrawCredit();
-			system("cls");
 			break;
+
 		case 3:	//exit
 			GameStart = false;
 		}
