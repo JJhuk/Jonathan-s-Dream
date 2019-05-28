@@ -791,6 +791,7 @@ void TextManager() {
 		istringstream ss(s);
 		string sub_s;
 		g_System->playSound(g_Sound[1], nullptr, false, &embi_Channel);
+		embi_Channel->setMode(FMOD_LOOP_NORMAL);
 		while (getline(ss, sub_s, '\t')) {
 			p = { 11,20 };
 			if (isName) {
@@ -813,6 +814,7 @@ void TextManager() {
 				}
 			}
 			if (!isName) {
+				embi_Channel->setMode(FMOD_LOOP_OFF);
 				Gotoxy(100, 23);
 				printf("¡å");
 				Sleep(1);
@@ -821,8 +823,10 @@ void TextManager() {
 			isName = !isName;
 			//g_System->update();
 			}
-		embi_Channel->stop();
+		g_System->update();
+		
 		}
+	embi_Channel->stop();
 	in.close();
 }
 
