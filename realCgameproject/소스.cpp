@@ -582,8 +582,28 @@ void TextManager() {
 				}
 			}
 			if (!isName) {
-				Gotoxy(100, 24);
-				printf("¡å");
+				bool isColor = false;
+				while (true) {
+					if (isColor) {
+						Gotoxy(100, 24);
+						printf("¡ä");
+					}
+					else {
+						Gotoxy(100, 23);
+						printf("¡å");
+					}
+					Sleep(200);
+					if (isColor) {
+						Gotoxy(100, 24);
+						printf(" ");
+					}
+					else {
+						Gotoxy(100, 23);
+						printf(" ");
+					}
+					isColor = !isColor;
+					
+				}
 				_getch();
 			}
 			isName = !isName;
@@ -591,7 +611,6 @@ void TextManager() {
 	}
 	in.close();
 }
-
 
 int main()
 {
