@@ -14,32 +14,25 @@
 #define RIGHT 3
 #define RETRY 4
  /*=============================전역 변수===========================================*/
-typedef struct {
-	wchar_t obstacle;
-	wchar_t player;
-	wchar_t wall;
-	wchar_t hole;
-}INFO;
-INFO info;
+wchar_t info[6] = { L"★●◎■○" };
 
-wchar_t stage[20][120] = { '\0', };
-const wchar_t StageData[15][120] =
+char stage[14][60] = { '\0', };
+const char StageData[14][60] =
 {
-	{L"■■■■■■■■■■■■■■■■■■■■■■■■■"},
-	{L"■■■    ■                                    ■"},
-	{L"■■    ■■                                    ■"},
-	{L"■■    ■■                                    ■"},
-	{L"■  o ■■                                      ■"},
-	{L"■ .  ■■                                      ■"},
-	{L"■      ■                                      ■"},
-	{L"■                         @                    ■"},
-	{L"■                                              ■"},
-	{L"■                                              ■"},
-	{L"■                                              ■"},
-	{L"■                                              ■"},
-	{L"■                                              ■"},
-	{L"■                                              ■"},
-	{L"■■■■■■■■■■■■■■■■■■■■■■■■■"}
+	{"                                                           "},
+	{"                                                           "},
+	{"                               [][][][][][][]              "},
+	{"                               []  x       []              "},
+	{"           [][][][][]          []  [][]    [][][][][][]    "},
+	{"           []    @+[][][][][]  []          x     x   []    "},
+	{"   [][][][][]  []  [][]    []  []          []  []    []    "},
+	{"   []  0O      0O      0O  []  []      [][][]  0O    []    "},
+	{"   []  []  [][]x     x []x [][][][]0O  []    0O    [][][][]"},
+	{"   []            [][]  x   []          []  0O            []"},
+	{"   [][][][][][][][][][]        0O  [][][]          x     []"},
+	{"                     []  0O    []  []  [][][][][][][][][][]"},
+	{"                     []x [][]      []                      "},
+	{"                     [][][][][][][][]                      "}
 };
 int currentX = 0, currentY = 0;
 int RestartValue;
@@ -71,49 +64,47 @@ void PlayerControl() {
 		//return DOWN;
 	}
 	else if (temp == 'a' || temp == 'A') {
-		dx = -1, dy = 0;
+		dx = -2, dy = 0;
 		//return LEFT;
 	}
 	else if (temp == 'd' || temp == 'D') {
-		dx = 1, dy = 0;
+		dx = 2, dy = 0;
 		//return RIGHT;
 	}
 	else if (temp == 'r' || temp == 'R') { //재시도
 		Restart();
 	}
 
-	if (stage[currentY + dy][currentX + dx] == '#') { //벽을 만나면 아무것도 안함
+	if (stage[currentY + dy][currentX + dx] == '[') { //벽을 만나면 아무것도 안함
 		return;
 	}
-	if (stage[currentY + dy][currentX + dx] == 'o') { //바위를 만나면
-		if (stage[currentY + dy * 2][currentX + dx * 2] == ' ') { // 바위를 민다  /StageData를 stage라고 바꿨음
+	if (stage[currentY + dy][currentX + dx] == '0') { //바위를 만나면 앞에는 숫자0 뒤에는 대문자 O
+		if (stage[currentY + dy * 2][currentX + dx * 2] == ' ') { // 바위를 민다  ok
 			stage[currentY + dy][currentX + dx] = ' ';
-			stage[currentY + dy * 2][currentX + dx * 2] = 'o';
+			stage[currentY + dy][currentX + dx + 1] = ' ';
+			stage[currentY + dy * 2][currentX + dx * 2] = '0';
+			stage[currentY + dy * 2][currentX + dx * 2 + 1] = 'O';
 		}
-		else if (stage[currentY + dy * 2][currentX + dx * 2] == 'o') { //바위가 두개 있으면 밀리지 않음
+		else if (stage[currentY + dy * 2][currentX + dx * 2] == '0') { //바위가 두개 있으면 밀리지 않음 ok
 			return;
 		}
-		else if (stage[currentY + dy * 2][currentX + dx * 2] == '.') { //목적지에 도달하면 .을 o로 바꿈
+		else if (stage[currentY + dy * 2][currentX + dx * 2] == 'x') { //목적지에 도달하면 X을 로 바꿈
 			stage[currentY + dy][currentX + dx] = ' ';
-			stage[currentY + dy * 2][currentX + dx * 2] = '&';
+			stage[currentY + dy][currentX + dx + 1] = ' ';
+			stage[currentY + dy * 2][currentX + dx * 2] = '<';
+			stage[currentY + dy * 2][currentX + dx * 2 + 1] = '>';
 		}
-		else if (stage[currentY + dy * 2][currentX + dx * 2] == '■') { //벽이면 아무것도 안함
+		else if (stage[currentY + dy * 2][currentX + dx * 2] == '<') {
+			stage[currentY + dy][currentX + dx] = ' ';
+			stage[currentY + dy][currentX + dx + 1] = ' ';
+			stage[currentY + dy * 2][currentX + dx * 2] = '0';
+			stage[currentY + dy * 2][currentX + dx * 2 + 1] = 'O';
+		}
+		else if (stage[currentY + dy * 2][currentX + dx * 2] == '[') { //벽이면 아무것도 안함 ok
 			return;
 		}
 	}
-	//&와 . o 변환
-	/*if (stage[currentY + dy][currentX + dy] == '&') { //골인 지점이라면
-		if (stage[currentY + dy * 2][currentX + dx * 2] == ' ') { // 이 부분이 문제
-			stage[currentY + dy][currentX + dx] = '.';
-			stage[currentY + dy * 2][currentY + dy * 2] = 'o';
-		}
-		else if (stage[currentY + dy * 2][currentX + dx * 2] == '#') {
-			return;
-		}
-		else if (stage[currentY + dy * 2][currentX + dx * 2] == 'o') {
-			return;
-		}
-	}*/
+
 
 	currentX += dx;
 	currentY += dy;
@@ -121,15 +112,18 @@ void PlayerControl() {
 
 /*스테이지를 그리고, 플레이어 출력*/
 void DrawStage() {
+	//wchar_t info[6] = { L"★●◎■○" };
 	setlocale(LC_ALL, "");
-	for (int stageY = 0; stageY < 20; stageY++) {
-		for (int stageX = 0; stageX < 120; stageX++) {
+	for (int stageY = 0; stageY < 14; stageY++) {
+		for (int stageX = 0; stageX < 60; stageX++) {
 
-			printf("%lc", stage[stageY][stageX]);
+			gotoxy(stageX, stageY);
+			_putch(stage[stageY][stageX]);
+
 		}
 	}
 	gotoxy(currentX, currentY); //플레이어의 현재 좌표에 가서 플레이어를 나타냄
-	printf("@");
+	putwchar(info[0]);
 }
 
 /*콘솔 창의 커서를 숨기는 함수*/
@@ -146,9 +140,9 @@ void Cursorhide(char show) {
 int StageClear() {
 	int cx = 0, cy = 0;
 	int count = 0;
-	for (cy = 0; cy < 10; cy++) {
-		for (cx = 0; cx < 21; cx++) {
-			if (stage[cy][cx] == '.' || stage[cy][cx] == 'o') //.이 있거나 o이 있으면 count++
+	for (cy = 0; cy < 12; cy++) {
+		for (cx = 0; cx < 57; cx++) {
+			if (stage[cy][cx] == 'x' || stage[cy][cx] == '0') //.이 있거나 o이 있으면 count++
 				count++;
 		}
 	}
@@ -160,26 +154,52 @@ int StageClear() {
 	}
 }//난 클리어했다!!!!!!!!!!!!!!!
 
-/*=============================================================================*/
+void printInfo() {
+	gotoxy(68, 2);
+	printf("PLAYER : ★");
+	gotoxy(68, 3);
+	printf("  ROCK : 0O");
+	gotoxy(68, 4);
+	printf("  HOLE : x ");
+	gotoxy(68, 5);
+	printf(" CLEAR : <>");
+	gotoxy(73, 7);
+	printf("U P");
+	gotoxy(74, 8);
+	printf("W");
+	gotoxy(66, 9);
+	printf("LEFT A     D RIGHT");
+	gotoxy(74, 10);
+	printf("S");
+	gotoxy(73, 11);
+	printf("DOWN");
+	gotoxy(67, 13);
+	printf("- R을 눌러 다시 하기");
+}
+
+/*================================================================================*/
 
 int main() {
+	setlocale(LC_ALL, "");
 	int x = 0, y = 0;
 
 	Cursorhide(0);
 	while (1) {
 		memcpy(stage, StageData, sizeof(stage)); //memcpy는 메모리를 복사
-		for (y = 0; y < 20; y++) { //플레이어를 찾아서 좌표를 입력받고, 원래 있던 자리는 공백으로
-			for (x = 0; x < 120; x++) {
-				if (stage[y][x] == '@') {
+		for (y = 0; y < 14; y++) { //플레이어를 찾아서 좌표를 입력받고, 원래 있던 자리는 공백으로
+			for (x = 0; x < 60; x++) {
+				if (stage[y][x] == '@' && stage[y][x + 1] == '+') {
 					currentX = x; //플레이어 현재 좌표 저장
 					currentY = y;
-					stage[y][x] = ' '; //이동했으므로 원래 있던 자리는 공백으로
+					stage[y][x] = ' ';
+					stage[y][x + 1] = ' ';//이동했으므로 원래 있던 자리는 공백으로
 				}
 			}
 		}
 		system("cls");
 		while (1) {
 			DrawStage(); // 스테이지와 플레이어 출력
+			printInfo();
 			PlayerControl(); //플레이어, 바위의 움직임 구현
 			if (RestartValue == 1) {
 				RestartValue = 0;
@@ -189,7 +209,7 @@ int main() {
 			if (StageClear() == 1) { //스테이지를 깬다면 프로그램 종료
 				system("cls");
 				DrawStage();
-
+				printInfo();
 				_getch();
 				Sleep(10);
 				system("cls");
