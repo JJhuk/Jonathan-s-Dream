@@ -223,12 +223,14 @@ bool FollowUP_Game() {
 	Gotoxy(0, 0);
 	if (IsCorrectAnswer) {
 		printf("정답입니다!!!!!!!!!!!!!!");
+		Sleep(1);
 		_getch();
 		return true;
 	}
 		
 	else {
 		printf("틀렸습니다!!!!!!!!!!!!!!");
+		Sleep(1);
 		_getch();
 		return false;
 	}
@@ -238,7 +240,6 @@ bool FollowUP_Game() {
 void Restart() {
 	RestartValue = 1; //RestartValue가 1이면 재시작 
 }
-
 
 /* 플레이어의 키를 받는 함수 WASD로 조작 */
 void PlayerControl() {
@@ -315,7 +316,6 @@ void DrawStage() {
 	putwchar(info[0]);
 }
 
-
 /*스테이지를 클리어 했는지 확인하는 함수*/
 int StageClear() {
 	int cx = 0, cy = 0;
@@ -386,8 +386,8 @@ bool Sokoban_Game() {
 				system("cls");
 				DrawStage();
 				printInfo();
-				_getch();
 				Sleep(10);
+				_getch();
 				system("cls");
 				return true;
 			}
@@ -416,7 +416,7 @@ void TextBox() {
 	printf("|                                                                                                                     |\n");
 	printf("|                                                                                                                     |\n");
 	printf("|                                                                                                                     |\n");
-	printf("|      ======== 이름   ===================================================================================            |\n");
+	printf("|      ===================================================================================================            |\n");
 	printf("|      |                                                                                                 |            |\n");
 	printf("|      |                                                                                                 |            |\n");
 	printf("|      |                                                                                                 |            |\n");
@@ -767,7 +767,7 @@ void TextManager() {
 					Sleep(50);
 					//여기에 자판소리 추가하면 될듯
 					printf("%c", sub_s[i]);
-					if (sub_s[i] == '.' && sub_s[i + 1] == '!') {	//이때 2번째줄부터 한칸 띄우고 텍스트가 출력되는 버그가 있음.
+					if (sub_s[i + 1] == '#') {	//이때 2번째줄부터 한칸 띄우고 텍스트가 출력되는 버그가 있음.
 						p.y++;
 						i++;
 						Gotoxy(p.x, p.y);
@@ -777,6 +777,7 @@ void TextManager() {
 			if (!isName) {
 				Gotoxy(100, 23);
 				printf("▼");
+				Sleep(1);
 				_getch();
 				}
 			isName = !isName;
@@ -799,9 +800,8 @@ int main()
 
 		case 1:	//start
 			TextManager();	//텍스트창
-			while (FollowUP_Game())
-				if (Sokoban_Game())
-					break;
+			while (!FollowUP_Game());
+			Sokoban_Game();
 			break;
 		case 2:	//credit
 			DrawCredit();
