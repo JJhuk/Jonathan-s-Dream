@@ -1,3 +1,6 @@
+#pragma once
+#pragma comment(lib,"C:\\Program Files (x86)\\FMOD SoundSystem\\FMOD Studio API Windows\\api\\lowlevel\\lib\\fmod_vc.lib")
+
 #include <stdio.h>
 #include <conio.h>
 #include <Windows.h>
@@ -6,11 +9,15 @@
 #include <wchar.h>
 #include <stddef.h>
 #include <locale.h>
+#include <iostream>
+#include <fmod.hpp>
+#include <fmod.h>
 
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <ctime>
 
 using namespace std;
 
@@ -81,6 +88,16 @@ int select_opt;	//귀찮아서 그냥 전역번수임.
 
 ifstream in;	//파일 출력
 
+// 전역 변수로 선언
+FMOD::System *g_System;
+FMOD::Sound *g_Sound[2];
+FMOD::Channel *g_Channel;
+FMOD::Channel *embi_Channel;
+
+bool IsPlaying_Key = false;
+bool IsPlaying_Main = false;
+bool IsPlaying = false;
+
 //함수명 Gotoxy
 //인자값인 x,y 에 대입하면 그 대입 한 곳으로 커서가 움직임
 void Gotoxy(int x, int y) {
@@ -88,6 +105,25 @@ void Gotoxy(int x, int y) {
 	Cur.X = x;
 	Cur.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
+}
+
+void FMod_Init()
+{
+	// 배경음, 효과음 초기화
+	FMOD::System_Create(&g_System);
+	g_System->init(32, FMOD_INIT_NORMAL, nullptr);
+	g_System->createSound("track1.mp3", FMOD_DEFAULT, nullptr, &g_Sound[0]);
+	g_System->createSound("keysound.mp3", FMOD_LOOP_NORMAL , nullptr, &g_Sound[1]);
+
+	// 배경음 출력
+	g_System->playSound(g_Sound[0], nullptr, false, &g_Channel);
+}
+
+void FMod_Release()
+{
+	for (int i = 0; i < 2; i++) g_Sound[i]->release();
+	g_System->close();
+	g_System->release();
 }
 
 // 입력 이벤트 출력
@@ -739,7 +775,7 @@ int DrawMenu() {
 	}
 }
 
-void GameInit() {
+void Game_Init() {
 	RemoveCursor();
 	system("cls");
 	select_opt = DrawMenu();		//1 게임시작 2 게임정보 3종료
@@ -754,6 +790,7 @@ void TextManager() {
 	while (getline(in, s)) {
 		istringstream ss(s);
 		string sub_s;
+		g_System->playSound(g_Sound[1], nullptr, false, &embi_Channel);
 		while (getline(ss, sub_s, '\t')) {
 			p = { 11,20 };
 			if (isName) {
@@ -766,6 +803,7 @@ void TextManager() {
 				for (int i = 0; i < sub_s.length(); i++) {
 					Sleep(50);
 					//여기에 자판소리 추가하면 될듯
+					
 					printf("%c", sub_s[i]);
 					if (sub_s[i + 1] == '#') {	//이때 2번째줄부터 한칸 띄우고 텍스트가 출력되는 버그가 있음.
 						p.y++;
@@ -781,7 +819,9 @@ void TextManager() {
 				_getch();
 				}
 			isName = !isName;
+			//g_System->update();
 			}
+		embi_Channel->stop();
 		}
 	in.close();
 }
@@ -791,15 +831,19 @@ int main()
 	bool GameStart = true;
 	bool IsClearSokoban = false;
 	bool IsClearFollowUp = false;
-	
+
+	int FMod_Key;
+	FMOD::Channel *embi_Channel;
+	FMod_Init();
 
 	while (GameStart) {
-		GameInit();
+		Game_Init();
 
 		switch (select_opt) {
 
 		case 1:	//start
 			TextManager();	//텍스트창
+			g_Channel->stop();
 			while (!FollowUP_Game());
 			Sokoban_Game();
 			break;
@@ -811,7 +855,7 @@ int main()
 			GameStart = false;
 		}
 	}
+	FMod_Release();
 	return 0;
 }
-
 
