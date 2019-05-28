@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <Windows.h>
-
+#include<time.h>
+#include<conio.h>
+#define LEFT 2
+#define RIGHT 3
 #define WIDTH 20 //가로크기(조절가능)
 #define HEIGHT 10//높이(조절가능)
 
@@ -137,12 +140,14 @@ void PrintMap() // 맵을 출력함
 		printf("▤");
 }
 
-void main()
+int main()
 {
+	long res;
 	char key;
-
+	time_t start, end;
+	double pst;
+	start = time(NULL);
 	init();
-
 	do
 	{
 		srand((int)malloc(NULL)); //중복없는 난수 생성, malloc함수는동적메모리할당(동적메모리를 잘 모르겠다;)
@@ -155,6 +160,16 @@ void main()
 
 		PrintMap();
 
-		Sleep(100); // sleep함수로 지정된 시간이 경과되거나 시그널을 수신하면 대기에서 풀림
+		Sleep(100);// sleep함수로 지정된 시간이 경과되거나 시그널을 수신하면 대기에서 풀림
+		end = time(NULL);
+		pst = difftime(end, start);
+		if (pst > 10)
+		{
+			system("cls");
+			printf("클리어!");
+			_getch();
+			return 0;
+		}
 	} while (!(PlayerContainsTree()));//플레이어가 나무랑 안부딪히는 동안 작동해야하므로
+	return 0;
 }
