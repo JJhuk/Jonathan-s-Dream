@@ -32,6 +32,9 @@ using namespace std;
 #define IMGSIZE_W 7
 #define IMGSIZE_H 4
 
+#define WIDTH 20 //가로크기(조절가능)
+#define HEIGHT 10//높이(조절가능)
+
 #define FOLLOWUP_START_X 10
 #define FOLLOWUP_START_Y 4
 
@@ -278,7 +281,7 @@ void Restart() {
 }
 
 /* 플레이어의 키를 받는 함수 WASD로 조작 */
-void PlayerControl() {
+void Tree_PlayerControl() {
 	int dx = 0, dy = 0; // 플레이어가 움직이면 변하는 좌표의 변화값
 	char temp = _getch(); //  _getch()함수는 문자 하나 입력을 대기
 	if (temp == 'w' || temp == 'W') {
@@ -372,7 +375,7 @@ int StageClear() {
 
 void printInfo() {
 	Gotoxy(68, 2);
-	printf("PLAYER : ★");
+	printf("Tree_Player : ★");
 	Gotoxy(68, 3);
 	printf("  ROCK : 0O");
 	Gotoxy(68, 4);
@@ -412,7 +415,7 @@ bool Sokoban_Game() {
 		while (1) {
 			DrawStage(); // 스테이지와 플레이어 출력
 			printInfo();
-			PlayerControl(); //플레이어, 바위의 움직임 구현
+			Tree_PlayerControl(); //플레이어, 바위의 움직임 구현
 			if (RestartValue == 1) {
 				RestartValue = 0;
 				break;
@@ -429,6 +432,174 @@ bool Sokoban_Game() {
 			}
 		}
 	}
+}
+
+#define LEFT 2
+#define RIGHT 3
+
+
+typedef struct  // 함수포인터 별칭을 정의하고 구조체로 묶음
+{
+	int x;
+	int y;
+
+	int act;
+}Tree;
+
+typedef struct
+{
+	int x;
+}Tree_Player;
+
+Tree tree[WIDTH]; //가로크기 내에서 나무떨어져야됨
+
+Tree_Player Player; // 플레이어의 위치를 나타냄
+
+int isKeyDown(int key) //키 입력 여부확인
+{
+	return ((GetAsyncKeyState(key) & 0x8000) != 0); // 이것도 비트연산자 값이라는데 잘 모르겠음
+}
+
+void Tree_init()
+{
+	int i;
+
+	for (i = 0; i < WIDTH; i++)
+		tree[i].act = FALSE;
+
+	Player.x = WIDTH / 2;
+}
+
+void CreateTree()//나무를 생성하는 것
+{
+	int i;
+
+	for (i = 0; i < WIDTH; i++)
+	{
+		if (!tree[i].act)
+		{
+			tree[i].x = rand() % WIDTH;
+			tree[i].y = HEIGHT - 1;
+
+			tree[i].act = TRUE;
+
+			return;
+		}
+	}
+}
+
+void MoveTree()//나무를 움직이는 것
+{
+	int i;
+
+	for (i = 0; i < WIDTH; i++)
+	{
+		if (tree[i].act)
+		{
+			tree[i].y--;
+		}
+	}
+}
+
+void DeleteTree()
+{
+	int i;
+
+	for (i = 0; i < WIDTH; i++)
+	{
+		if (tree[i].act && tree[i].y < 0)
+		{
+			tree[i].act = FALSE;
+		}
+	}
+}
+
+int Tree_PlayerContainsTree()//플레이어랑 나무랑만났을때
+{
+	int i;
+
+	for (i = 0; i < WIDTH; i++)
+	{
+		if ((tree[i].act) && (tree[i].y == 0) && (tree[i].x == Player.x))//플레어가 움직인 것과 나무가 만났을 때
+		{
+			system("cls");
+			Sleep(1000);
+			printf("죽었습니다ㅜㅜㅜ 다시하세요\n");
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+void MoveTree_Player() //플레이어의 움직이는 것
+{
+	if (isKeyDown(0x41)) //왼쪽을 나타내는 아스키코드값
+		Player.x -= 1; //왼쪽일 경우 x좌표-1
+	if (isKeyDown(0x44))// 오른쪽을 나타내는 아스키 코드값 대체
+		Player.x += 1; // 오른쪽일 경우 x좌표 +1
+
+	if (Player.x < 0)
+		Player.x = 0;
+	if (Player.x > WIDTH - 1)
+		Player.x = WIDTH - 1;
+}
+
+void Tree_PrintMap() // 맵을 출력함
+{
+	system("cls"); //처음에 초기화 시켜주는 것
+
+	int i;
+
+	for (i = 0; i < WIDTH; i++)
+	{
+		if (tree[i].act)
+		{
+			Gotoxy(tree[i].x, HEIGHT - tree[i].y);//goto함수 x,y좌표값으로 생각하면 편함
+			printf("♠");
+		}
+	}
+
+	Gotoxy(Player.x, HEIGHT);
+	printf("√");
+
+	Gotoxy(0, HEIGHT + 1);
+	for (i = 0; i < WIDTH; i++)
+		printf("▤");
+}
+
+
+bool TreeAvoid_Game()
+{
+	long res;
+	char key;
+	time_t start, end;
+	double pst;
+	start = time(NULL);
+	Tree_init();
+	do
+	{
+		srand((int)malloc(NULL)); //중복없는 난수 생성, malloc함수는동적메모리할당(동적메모리를 잘 모르겠다;)
+
+		CreateTree();
+		MoveTree();
+		DeleteTree();//위의 함수들을 불러옴
+
+		MoveTree_Player();
+
+		Tree_PrintMap();
+
+		Sleep(100);// sleep함수로 지정된 시간이 경과되거나 시그널을 수신하면 대기에서 풀림
+		end = time(NULL);
+		pst = difftime(end, start);
+		if (pst > 10)
+		{
+			system("cls");
+			printf("클리어!");
+			return true;
+		}
+	} while (!(Tree_PlayerContainsTree()));//플레이어가 나무랑 안부딪히는 동안 작동해야하므로
+	return false;
 }
 
 void TextBox() {
@@ -851,6 +1022,8 @@ int main()
 			g_Channel->stop();
 			while (!FollowUP_Game());
 			Sokoban_Game();
+			TreeAvoid_Game();
+			Sleep(1000);
 			break;
 		case 2:	//credit
 			DrawCredit();
@@ -863,4 +1036,5 @@ int main()
 	FMod_Release();
 	return 0;
 }
+
 
