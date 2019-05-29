@@ -818,6 +818,7 @@ void TextManager() {
 				Gotoxy(100, 23);
 				printf("¡å");
 				Sleep(1);
+				
 				_getch();
 				}
 			isName = !isName;
