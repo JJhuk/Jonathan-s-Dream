@@ -93,6 +93,7 @@ void Render()
 	}
 
 
+
 }
 
 void Release()
@@ -101,4 +102,5 @@ void Release()
 	g_System->close();
 	g_System->release();
 }
+
 
