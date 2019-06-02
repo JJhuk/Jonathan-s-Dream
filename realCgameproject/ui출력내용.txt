@@ -1,0 +1,28 @@
+플레이 흐름
+시작>chapter1> round1:지는게임 > chapter 2> round 2:나무피하기> chapter3> round3: 소코반>chapter4>round4:따라하기>chapter5>종료  
+게임 시작(메인 타이틀)
+chapter1 gui1 시작
+chapter1 종료
+round 1 시작
+round 1 종료
+chapter2 시작 gui2
+3번째 나래이션에서 gui2>gui3 변화
+chapter2 종료
+round 2 시작(나무피하기)
+round 2 종료
+chapter3 시작(gui 3 유지)
+chapter3 8번째 줄 족장의 말에서 gui3>gui 변화(족장에게 혼나는 조나단)
+chapter3 15번째 줄 조나단의 말에서 gui 변화(족장에게 혼나는 조나단)>4 변화
+chapter3 19번째 줄 <머나먼 절벽> gui4>3 변화
+chapter3 22번째 줄 나래이션 어느날 gui3>5 변화
+chapter3 종료
+round 3 시작 소코반 
+round 3 종료 
+chapter 4 장면 완료된 전환 없음
+chapter 4 종료
+round 4 따라하기 시작
+round 4 종료
+chapter 5 시작 gui (일반 갈매기) 
+chapter 5 3번째 줄 gui (일반 갈매기)> gui 9 빛이 되어 떠나가는 조나단 변화
+chapter 5 종료
+게임 종료
