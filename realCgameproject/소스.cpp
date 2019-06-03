@@ -137,7 +137,7 @@ void FMod_Release()
 // 입력 이벤트 출력
 // 함수명 : DrawTemplate
 // 기능 : 게임의 틀을 출력하는함수
-void DrawFollowUPTemplate() {
+void DrawFollowUPTemplate() { 
 	system("cls");
 	Gotoxy(0, 0); //첫 |부분 6,3
 	printf("========================================================================================================================\n");
@@ -528,8 +528,9 @@ int Tree_PlayerContainsTree()//플레이어랑 나무랑만났을때
 		if ((tree[i].act) && (tree[i].y == 0) && (tree[i].x == Player.x))//플레어가 움직인 것과 나무가 만났을 때
 		{
 			system("cls");
-			Sleep(1000);
-			printf("죽었습니다ㅜㅜㅜ 다시하세요\n");
+			printf("조나단이 나무에 박아 죽었습니다. 다시하세요.\n");
+			Sleep(10000);
+			exit(0);
 			return TRUE;
 		}
 	}
@@ -599,7 +600,7 @@ bool TreeAvoid_Game()
 		if (pst > 10)
 		{
 			system("cls");
-			Sleep(1000);
+			Sleep(10000);
 			printf("클리어!");
 			return true;
 		}
@@ -1339,7 +1340,6 @@ void TextManager() {
 					TextBox(UI_change);
 					Gotoxy(16, 18);
 					cout << sub_s;
-					
 				}
 				else {
 					Gotoxy(p.x, p.y);
