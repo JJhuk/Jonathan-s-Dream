@@ -117,8 +117,8 @@ void FMod_Init()
 	// 배경음, 효과음 초기화
 	FMOD::System_Create(&g_System);
 	g_System->init(32, FMOD_INIT_NORMAL, nullptr);
-	g_System->createSound("main.mp3", FMOD_LOOP_NORMAL, nullptr, &g_Sound[0]);
-	g_System->createSound("keysound.mp3", FMOD_LOOP_NORMAL , nullptr, &g_Sound[1]);
+	g_System->createSound("main.mp3", FMOD_LOOP_NORMAL, nullptr, &g_Sound[0]);  //FMOD_LOOP_NORMAL은 노래를 반복적으로 재생
+	g_System->createSound("keysound.mp3", FMOD_LOOP_NORMAL , nullptr, &g_Sound[1]); //FMOD_DEFAULT은 노래를 한번만 재생
 	g_System->createSound("FollowUP.mp3", FMOD_LOOP_NORMAL, nullptr, &g_Sound[2]);
 	g_System->createSound("sokoban.mp3", FMOD_LOOP_NORMAL, nullptr, &g_Sound[3]);
 	g_System->createSound("Tree.mp3", FMOD_LOOP_NORMAL, nullptr, &g_Sound[4]);
@@ -266,6 +266,7 @@ bool FollowUP_Game() {
 	system("cls");
 	Gotoxy(0, 0);
 	if (IsCorrectAnswer) {
+		gotoxy(20, 20);
 		printf("정답입니다!!!!!!!!!!!!!!");
 		Sleep(1);
 		_getch();
@@ -273,6 +274,7 @@ bool FollowUP_Game() {
 	}
 		
 	else {
+		gotoxy(20, 20);
 		printf("틀렸습니다!!!!!!!!!!!!!!");
 		Sleep(1);
 		_getch();
