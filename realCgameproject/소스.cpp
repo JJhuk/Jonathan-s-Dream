@@ -266,16 +266,22 @@ bool FollowUP_Game() {
 	system("cls");
 	Gotoxy(0, 0);
 	if (IsCorrectAnswer) {
-		gotoxy(20, 20);
-		printf("정답입니다!!!!!!!!!!!!!!");
+		Gotoxy(35, 13);
+		printf("비행 실력을 멋지게 뽐내는데 성공했습니다!!");
 		Sleep(1);
 		_getch();
 		return true;
 	}
 		
 	else {
-		gotoxy(20, 20);
-		printf("틀렸습니다!!!!!!!!!!!!!!");
+		Gotoxy(35, 13);
+		printf("실력을 뽐내다가 날개에 쥐가 나 떨어져버렸습니다 ㅠㅠ");
+		Gotoxy(41, 15);
+		printf("X를 눌러 조의를 표하세요 ㅠ");
+		Sleep(1);
+		_getch();
+		Gotoxy(38,17);
+		printf("아무 키를 눌러 다시 시도해보세요!");
 		Sleep(1);
 		_getch();
 		return false;
@@ -382,7 +388,7 @@ int StageClear() {
 
 void printInfo() {
 	Gotoxy(68, 2);
-	printf("Tree_Player : ★");
+	printf("Player : ★");
 	Gotoxy(68, 3);
 	printf("  ROCK : 0O");
 	Gotoxy(68, 4);
@@ -432,8 +438,28 @@ bool Sokoban_Game() {
 				system("cls");
 				DrawStage();
 				printInfo();
-				Sleep(10);
+				system("cls");
+				Gotoxy(52, 8);
+				printf("..");
+				Sleep(1000);
+				Gotoxy(52, 9);
+				printf("..");
+				Sleep(1000);
+				Gotoxy(52, 10);
+				printf("..");
+				Sleep(1000);
+				Gotoxy(52, 11);
+				printf("..");
+				Sleep(1000);
+				Gotoxy(49, 15);
+				printf("<system>");
+				Gotoxy(38, 17);
+				printf("'조나단'(이)가 비행 기술에 각성하였다!");
+				Sleep(1000);
+				Gotoxy(41, 19);
+				printf("아무 키를 눌러 진행하세요!");
 				_getch();
+				Sleep(10);
 				system("cls");
 				return true;
 			}
@@ -531,7 +557,9 @@ int Tree_PlayerContainsTree()//플레이어랑 나무랑만났을때
 		{
 			system("cls");
 			Sleep(1000);
+			Gotoxy(34,10);
 			printf("죽었습니다ㅜㅜㅜ 다시하세요\n");
+			return 0;
 			return TRUE;
 		}
 	}
@@ -602,7 +630,8 @@ bool TreeAvoid_Game()
 		{
 			system("cls");
 			Sleep(1000);
-			printf("클리어!");
+			Gotoxy(44, 13);
+			printf("!!!!!!클리어!!!!!!");
 			return true;
 		}
 	} while (!(Tree_PlayerContainsTree()));//플레이어가 나무랑 안부딪히는 동안 작동해야하므로
