@@ -268,8 +268,11 @@ bool FollowUP_Game() {
 	if (IsCorrectAnswer) {
 		Gotoxy(35, 13);
 		printf("비행 실력을 멋지게 뽐내는데 성공했습니다!!");
-		Sleep(1);
+		Gotoxy(37, 15);
+		Sleep(1000);
+		printf("아무 키를 눌러 계속 진행하세요!!");
 		_getch();
+		
 		return true;
 	}
 		
@@ -557,9 +560,16 @@ int Tree_PlayerContainsTree()//플레이어랑 나무랑만났을때
 		{
 			system("cls");
 			Sleep(1000);
-			Gotoxy(34,10);
-			printf("죽었습니다ㅜㅜㅜ 다시하세요\n");
-			return 0;
+			Gotoxy(37, 10);
+			printf("조나단이 날다가 나무에 부딪혔습니다...");
+			Sleep(1000);
+			Gotoxy(40, 12);
+			printf("X를 눌러 조의를 표하세요..ㅠ");
+			_getch();
+			Gotoxy(40, 14);
+			printf("ENTER를 눌러 진행하세요!");
+			_getch();
+			
 			return TRUE;
 		}
 	}
